@@ -1,6 +1,7 @@
 # Spring Boot 게시판 프로젝트
 
 이 프로젝트는 Spring Boot, Gradle, MySQL을 사용하여 개발한 간단한 웹 게시판입니다.
+<img width="1710" height="788" alt="Image" src="https://github.com/user-attachments/assets/711b2f9f-8fbc-435e-abc8-d5a25461426d" />
 
 ## 주요 기능
 - 회원가입 및 로그인 기능
@@ -35,6 +36,29 @@ demo/
 ├── build.gradle                        # Gradle 빌드 스크립트
 └── README.md                           # 프로젝트 설명 파일
 ```
+
+## ERD (Entity Relationship Diagram)
+
+```mermaid
+erDiagram
+    MEMBER {
+        Long id PK "회원 ID"
+        String username "로그인 ID"
+        String password "비밀번호"
+        String name "이름"
+    }
+
+    CONTENT {
+        Long id PK "게시글 ID"
+        String title "제목"
+        String body "내용"
+        Long member_id FK "작성자 ID"
+        datetime createdAt "생성일"
+    }
+
+    MEMBER ||--o{ CONTENT : "writes"
+  ```
+
 ## 시작하기
 
 ### 1. 데이터베이스 설정
