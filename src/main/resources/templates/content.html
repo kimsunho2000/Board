@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>게시물 조회</title>
+  <style>
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+      background-color: #f8f9fa;
+      margin: 0;
+      padding: 20px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+    }
+    .container {
+      background-color: #ffffff;
+      padding: 40px;
+      border-radius: 8px;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+      width: 100%;
+      max-width: 800px;
+    }
+    .header {
+      border-bottom: 2px solid #e9ecef;
+      padding-bottom: 20px;
+      margin-bottom: 30px;
+    }
+    .title {
+      font-size: 28px;
+      font-weight: bold;
+      color: #343a40;
+      margin-bottom: 10px;
+    }
+    .meta-info {
+      display: flex;
+      justify-content: space-between;
+      color: #6c757d;
+      font-size: 14px;
+    }
+    .content-body {
+      line-height: 1.8;
+      font-size: 16px;
+      color: #495057;
+      margin-bottom: 40px;
+      min-height: 200px;
+      white-space: pre-wrap;
+    }
+    .button-group {
+      display: flex;
+      gap: 10px;
+      justify-content: center;
+    }
+    .btn {
+      padding: 12px 24px;
+      border: none;
+      border-radius: 4px;
+      font-size: 16px;
+      font-weight: 600;
+      cursor: pointer;
+      text-decoration: none;
+      text-align: center;
+      transition: all 0.2s;
+    }
+    .btn-primary {
+      background-color: #007bff;
+      color: white;
+    }
+    .btn-primary:hover {
+      background-color: #0056b3;
+    }
+    .btn-secondary {
+      background-color: #6c757d;
+      color: white;
+    }
+    .btn-secondary:hover {
+      background-color: #545b62;
+    }
+    .btn-danger {
+      background-color: #dc3545;
+      color: white;
+    }
+    .btn-danger:hover {
+      background-color: #c82333;
+    }
+  </style>
+</head>
+<body>
+<div class="container">
+  <div class="header">
+    <div class="title" th:text="${content.title}">제목</div>
+    <div class="meta-info">
+      <span>게시물 ID: <span th:text="${content.id}">1</span></span>
+      <span>작성일: <span th:text="${#temporals.format(content.createdAt, 'yyyy-MM-dd HH:mm')}">2024-01-01 10:00</span></span>
+    </div>
+  </div>
+
+  <div class="content-body" th:text="${content.content}">
+    게시물 내용이 여기에 표시됩니다.
+  </div>
+
+  <div class="button-group">
+    <a href="/home" class="btn btn-secondary">목록으로</a>
+    <div th:if="${currentUserId != null and currentUserId == content.userId}">
+      <a th:href="@{'/api/posts/' + ${content.id} + '/edit'}" class="btn btn-primary">수정</a>
+      <button type="button" class="btn btn-danger" th:onclick="|deletePost(${content.id})|">삭제</button>
+    </div>
+  </div>
+</div>
+
+<script>
+  function deletePost(contentId) {
+    if (confirm('정말로 이 게시물을 삭제하시겠습니까?')) {
+      fetch(`/api/posts/${contentId}`, {
+        method: 'DELETE'
+      })
+      .then(response => {
+        if (response.ok) {
+          alert('게시물이 삭제되었습니다.');
+          window.location.href = '/home';
+        } else {
+          alert('삭제에 실패했습니다.');
+        }
+      })
+      .catch(error => {
+        console.error('Error:', error);
+        alert('삭제 중 오류가 발생했습니다.');
+      });
+    }
+  }
+</script>
+</body>
+</html>
